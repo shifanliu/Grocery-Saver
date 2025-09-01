@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from datetime import datetime
 from app.database import get_db, engine
 from app.models import Store
 from app.database import Base
@@ -13,10 +14,20 @@ Base.metadata.create_all(bind=engine)
 
 @router.get("")
 def list_stores(db: Session = Depends(get_db)):
+    """
+    List all stores
+    
+    Returns a list of all available stores with their basic information.
+    """
     # Initialize repository if needed
     repo_manager.initialize(db)
     
-    return repo_manager.list_stores()
+    stores = repo_manager.list_stores()
+    return {
+        "stores": stores,
+        "count": len(stores),
+        "ts": datetime.utcnow().isoformat()
+    }
 
 
 @router.post("")
@@ -29,8 +40,19 @@ def create_store(store: dict, db: Session = Depends(get_db)):
 
 @router.get("/stats")
 def get_stats(db: Session = Depends(get_db)):
-    """Get repository statistics"""
+    """
+    Get repository statistics
+    
+    Returns comprehensive statistics about the repository including:
+    - Total number of items and stores
+    - Item counts per store
+    - Repository status
+    """
     # Initialize repository if needed
     repo_manager.initialize(db)
     
-    return repo_manager.get_stats()
+    stats = repo_manager.get_stats()
+    return {
+        **stats,
+        "ts": datetime.utcnow().isoformat()
+    }

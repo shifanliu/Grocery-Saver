@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from typing import Optional
 from datetime import datetime
@@ -15,13 +15,22 @@ Base.metadata.create_all(bind=engine)
 
 @router.get("")
 def list_items(
-    store_id: Optional[str] = None,
-    limit: int = Query(20, ge=1, le=100),
-    offset: int = Query(0, ge=0),
-    sort: str = Query("last_seen_time"),
-    order: str = Query("desc"),
+    store_id: Optional[str] = Query(None, description="Filter by store ID"),
+    limit: int = Query(20, ge=1, le=100, description="Number of items to return"),
+    offset: int = Query(0, ge=0, description="Number of items to skip"),
+    sort: str = Query("last_seen_time", description="Sort field: last_seen_time, name, price, promotion_price"),
+    order: str = Query("desc", description="Sort order: asc or desc"),
     db: Session = Depends(get_db),
 ):
+    """
+    List items with filtering and pagination
+    
+    - **store_id**: Filter by store ID
+    - **limit**: Number of items to return (1-100)
+    - **offset**: Number of items to skip
+    - **sort**: Sort field (last_seen_time, name, price, promotion_price)
+    - **order**: Sort order (asc, desc)
+    """
     # Initialize repository if needed
     repo_manager.initialize(db)
     
@@ -33,17 +42,30 @@ def list_items(
         order=order
     )
 
-    return {"items": items, "limit": limit, "offset": offset, "ts": datetime.utcnow()}
+    return {
+        "items": items, 
+        "limit": limit, 
+        "offset": offset, 
+        "total": len(items),
+        "ts": datetime.utcnow().isoformat()
+    }
 
 
 @router.get("/{item_id}")
 def get_item(item_id: str, db: Session = Depends(get_db)):
+    """
+    Get item by ID
+    
+    Supports both formats:
+    - Single ID: "100364490"
+    - Store:ID format: "costco_business_delivery:100364490"
+    """
     # Initialize repository if needed
     repo_manager.initialize(db)
     
     item = repo_manager.get_item(item_id)
     if not item:
-        return {"error": "not found"}
+        raise HTTPException(status_code=404, detail="Item not found")
 
     return item
 
@@ -84,15 +106,63 @@ def bulk_upsert(payload: dict, db: Session = Depends(get_db)):
     return {"upserted": len(items)}
 
 
+@router.post("")
+def upsert_item(item_data: dict, db: Session = Depends(get_db)):
+    """
+    Upsert item (temporary in-memory storage for debugging)
+    
+    Required fields:
+    - id: Item ID
+    - name: Item name
+    - store_id: Store ID
+    
+    Optional fields:
+    - price: Item price
+    - promotion_price: Promotion price
+    - category: Item category
+    - active: Item status (default: true)
+    - last_seen_time: Last seen timestamp (default: current time)
+    """
+    # Initialize repository if needed
+    repo_manager.initialize(db)
+    
+    # Validate required fields
+    required_fields = ["id", "name", "store_id"]
+    for field in required_fields:
+        if field not in item_data:
+            raise HTTPException(status_code=400, detail=f"Missing required field: {field}")
+    
+    try:
+        result = repo_manager.upsert_item(item_data)
+        return {
+            "success": True,
+            "item": result,
+            "ts": datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to upsert item: {str(e)}")
+
+
 @router.get("/search")
 def search_items(
     q: str = Query(..., description="Search query"),
     store_id: Optional[str] = Query(None, description="Filter by store ID"),
     db: Session = Depends(get_db),
 ):
-    """Search items by name"""
+    """
+    Search items by name
+    
+    - **q**: Search query (required)
+    - **store_id**: Filter by store ID (optional)
+    """
     # Initialize repository if needed
     repo_manager.initialize(db)
     
     items = repo_manager.search_items(q, store_id)
-    return {"items": items, "query": q, "store_id": store_id, "count": len(items)}
+    return {
+        "items": items, 
+        "query": q, 
+        "store_id": store_id, 
+        "count": len(items),
+        "ts": datetime.utcnow().isoformat()
+    }
