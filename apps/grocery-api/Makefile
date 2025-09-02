@@ -16,6 +16,11 @@ HOST := 0.0.0.0
 # Development commands
 # --------------------------
 
+.PHONY: uv
+uv:
+	@echo "Installing uv CLI tool..."
+	python3 -m pip install --upgrade pip uv
+	
 .PHONY: run
 run: 
 	@echo "Starting Uvicorn with auto-reload: $(APP) on $(HOST):$(PORT)"
