@@ -2,7 +2,6 @@
 name = "grocery-api"
 version = "0.1.0"
 description = "Grocery API for the Grocery-Saver project"
-readme = "README.md"
 requires-python = ">=3.10"
 authors = [
   { name = "Grocery Saver Maintainer", email = "shifanliu@gmail.com" }
@@ -11,7 +10,24 @@ dependencies = [
   "fastapi>=0.111",
   "uvicorn[standard]>=0.30",
   "sqlalchemy>=2.0",
+  
   "psycopg2-binary>=2.9",
   "pydantic>=2.7",
   "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "flake8>=6.0",
+  "black>=24.0",
+  "isort>=6.0",
+  "pylint>=3.0",
+  "pytest-cov>=4.0",      # for coverage
+  "httpx>=0.26" 
+]
+
+[dependency-groups]
+dev = [
+    "autoflake>=2.3.1",
 ]

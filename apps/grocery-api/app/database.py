@@ -1,6 +1,7 @@
 import os
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 # 如果没有设置环境变量，就用 SQLite 本地文件
 DEFAULT_DB_URL = "sqlite:///./grocery.db"
@@ -14,6 +15,7 @@ if DATABASE_URL.startswith("sqlite"):
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, connect_args=connect_args)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()

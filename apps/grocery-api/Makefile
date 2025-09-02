@@ -26,7 +26,25 @@ shell:
 	@echo "Starting Python shell inside uv environment"
 	@$(PY)
 
-.PHONY: install
-install:
+.PHONY: sync
+sync:
 	@echo "Installing project dependencies from pyproject.toml"
-	@$(UV) sync
+	@$(UV) sync --extra dev 
+
+
+.PHONY: test
+test:
+	@echo "Running tests with pytest and checking coverage >= 80%"
+	@$(UV) run pytest --cov=app --cov-fail-under=80 tests
+
+
+.PHONY: lint
+lint:
+	@echo "Auto-fixing code..."
+	@$(UV) run isort app
+	@$(UV) run black app
+	@$(UV) run autoflake --in-place --remove-unused-variables --remove-all-unused-imports -r app
+	@echo "Lint report (flake8 + pylint):"
+	@$(UV) run flake8 app
+	@$(UV) run pylint app
+

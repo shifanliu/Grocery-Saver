@@ -1,32 +1,35 @@
-from typing import List, Dict, Optional, Any
-from pathlib import Path
-from sqlalchemy.orm import Session
-from sqlalchemy import text
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from app.models import Item as DBItem
+from app.models import Store as DBStore
+
 from .base_repo import BaseRepository
-from app.database import get_db
-from app.models import Item as DBItem, Store as DBStore
 
 
 class DatabaseRepository(BaseRepository):
     """Database-based data repository for grocery items and stores"""
-    
+
     def __init__(self, db_session: Session):
         self.db = db_session
-    
+
     def load_csv(self, paths: List[Path]) -> None:
         """Load data from CSV files into database"""
         # This would typically be used for initial data loading
         # For now, we'll just note that data should already be in DB
         print("Database repository: CSV loading not implemented - data should be in DB")
-    
+
     def list_items(
-        self, 
+        self,
         store_id: Optional[str] = None,
         limit: int = 20,
         offset: int = 0,
         sort: str = "last_seen_time",
-        order: str = "desc"
+        order: str = "desc",
     ) -> List[Dict[str, Any]]:
         """List items with filtering and pagination"""
         valid_sort = {"last_seen_time", "name", "price", "promotion_price"}
@@ -52,19 +55,20 @@ class DatabaseRepository(BaseRepository):
             }
             for i in q.all()
         ]
-    
+
     def get_item(self, item_id: str) -> Optional[Dict[str, Any]]:
         """Get item by ID (supports both 'store:id' and single id formats)"""
         # Handle 'store:id' format
-        if ':' in item_id:
-            store_id, item_id = item_id.split(':', 1)
-            item = self.db.query(DBItem).filter(
-                DBItem.id == item_id,
-                DBItem.store_id == store_id
-            ).first()
+        if ":" in item_id:
+            store_id, item_id = item_id.split(":", 1)
+            item = (
+                self.db.query(DBItem)
+                .filter(DBItem.id == item_id, DBItem.store_id == store_id)
+                .first()
+            )
         else:
             item = self.db.get(DBItem, item_id)
-        
+
         if not item:
             return None
 
@@ -78,16 +82,18 @@ class DatabaseRepository(BaseRepository):
             "category": item.category,
             "active": item.active,
         }
-    
-    def search_items(self, q: str, store_id: Optional[str] = None) -> List[Dict[str, Any]]:
+
+    def search_items(
+        self, q: str, store_id: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """Search items by name (case-insensitive)"""
         query = self.db.query(DBItem).filter(DBItem.name.ilike(f"%{q}%"))
-        
+
         if store_id:
             query = query.filter(DBItem.store_id == store_id)
-        
+
         items = query.all()
-        
+
         return [
             {
                 "id": item.id,
@@ -101,46 +107,47 @@ class DatabaseRepository(BaseRepository):
             }
             for item in items
         ]
-    
+
     def list_stores(self) -> List[Dict[str, Any]]:
         """List all stores"""
         stores = self.db.query(DBStore).all()
-        return [
-            {"id": s.id, "name": s.name, "location": s.location}
-            for s in stores
-        ]
-    
+        return [{"id": s.id, "name": s.name, "location": s.location} for s in stores]
+
     def upsert_item(self, item_data: Dict[str, Any]) -> Dict[str, Any]:
         """Upsert item using database"""
         # Check if item exists
-        existing_item = self.db.get(DBItem, item_data['id'])
-        
+        existing_item = self.db.get(DBItem, item_data["id"])
+
         if existing_item:
             # Update existing item
-            existing_item.name = item_data['name']
-            existing_item.price = item_data.get('price')
-            existing_item.promotion_price = item_data.get('promotion_price')
-            existing_item.store_id = item_data['store_id']
-            existing_item.last_seen_time = datetime.fromisoformat(item_data.get('last_seen_time', datetime.utcnow().isoformat()))
-            existing_item.category = item_data.get('category', '')
-            existing_item.active = item_data.get('active', True)
+            existing_item.name = item_data["name"]
+            existing_item.price = item_data.get("price")
+            existing_item.promotion_price = item_data.get("promotion_price")
+            existing_item.store_id = item_data["store_id"]
+            existing_item.last_seen_time = datetime.fromisoformat(
+                item_data.get("last_seen_time", datetime.utcnow().isoformat())
+            )
+            existing_item.category = item_data.get("category", "")
+            existing_item.active = item_data.get("active", True)
             item = existing_item
         else:
             # Create new item
             item = DBItem(
-                id=item_data['id'],
-                name=item_data['name'],
-                price=item_data.get('price'),
-                promotion_price=item_data.get('promotion_price'),
-                store_id=item_data['store_id'],
-                last_seen_time=datetime.fromisoformat(item_data.get('last_seen_time', datetime.utcnow().isoformat())),
-                category=item_data.get('category', ''),
-                active=item_data.get('active', True)
+                id=item_data["id"],
+                name=item_data["name"],
+                price=item_data.get("price"),
+                promotion_price=item_data.get("promotion_price"),
+                store_id=item_data["store_id"],
+                last_seen_time=datetime.fromisoformat(
+                    item_data.get("last_seen_time", datetime.utcnow().isoformat())
+                ),
+                category=item_data.get("category", ""),
+                active=item_data.get("active", True),
             )
             self.db.add(item)
-        
+
         self.db.commit()
-        
+
         return {
             "id": item.id,
             "name": item.name,
@@ -151,29 +158,31 @@ class DatabaseRepository(BaseRepository):
             "category": item.category,
             "active": item.active,
         }
-    
+
     def get_stats(self) -> Dict[str, Any]:
         """Get repository statistics"""
         item_count = self.db.query(DBItem).count()
         store_count = self.db.query(DBStore).count()
-        
+
         # Get item counts by store
         store_counts = {}
         stores = self.db.query(DBStore).all()
         for store in stores:
             count = self.db.query(DBItem).filter(DBItem.store_id == store.id).count()
             store_counts[store.id] = count
-        
+
         return {
             "items": item_count,
             "stores": store_count,
             "loaded": True,
-            "store_counts": store_counts
+            "store_counts": store_counts,
         }
 
 
 # Factory function to create repository based on configuration
-def create_repository(repo_type: str = "csv", db_session: Optional[Session] = None) -> BaseRepository:
+def create_repository(
+    repo_type: str = "csv", db_session: Optional[Session] = None
+) -> BaseRepository:
     """Factory function to create appropriate repository"""
     if repo_type == "db":
         if not db_session:
@@ -181,4 +190,5 @@ def create_repository(repo_type: str = "csv", db_session: Optional[Session] = No
         return DatabaseRepository(db_session)
     else:
         from .csv_repo import CSVRepository
+
         return CSVRepository()
