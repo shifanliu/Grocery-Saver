@@ -31,7 +31,7 @@ jobs:
 
       # Step 4: Sync dependencies (including dev extras)
       - name: Sync dependencies
-        run: uv sync --extras dev
+        run: uv sync --extra dev
 
       # Step 5: Run linting
       - name: Lint
