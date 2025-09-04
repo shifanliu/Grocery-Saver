@@ -1,3 +1,10 @@
+"""
+Repository manager module.
+
+Provides RepositoryManager, a high-level interface for initializing
+and accessing repository implementations (CSV or DB) based on config.
+"""
+
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy.orm import Session
@@ -34,7 +41,9 @@ class RepositoryManager:
     def get_repository(self) -> BaseRepository:
         """Get the repository instance"""
         if not self._initialized:
-            raise RuntimeError("Repository not initialized. Call initialize() first.")
+            raise RuntimeError(
+                "Repository not initialized. Call initialize() first."
+            )
         return self._repo
 
     def list_items(
@@ -47,7 +56,11 @@ class RepositoryManager:
     ) -> List[Dict[str, Any]]:
         """List items with filtering and pagination"""
         return self.get_repository().list_items(
-            store_id=store_id, limit=limit, offset=offset, sort=sort, order=order
+            store_id=store_id,
+            limit=limit,
+            offset=offset,
+            sort=sort,
+            order=order,
         )
 
     def get_item(self, item_id: str) -> Optional[Dict[str, Any]]:

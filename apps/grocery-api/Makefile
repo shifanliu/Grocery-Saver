@@ -19,7 +19,7 @@ HOST := 0.0.0.0
 .PHONY: uv
 uv:
 	@echo "Installing uv CLI tool..."
-	python3 -m pip install --upgrade pip uv
+	python -m pip install --upgrade pip uv
 	
 .PHONY: run
 run: 

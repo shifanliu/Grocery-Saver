@@ -1,3 +1,11 @@
+"""
+SQLAlchemy ORM models for the Grocery Saver API.
+
+This module defines two database models:
+- Store: Represents a store with id, name, and location.
+- Item: Represents a grocery item with price, category, and metadata.
+"""
+
 from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, Float, String
@@ -7,14 +15,20 @@ from app.database import Base
 
 
 class Store(Base):
+    """Database model for a store."""
+
     __tablename__ = "stores"
+
     id: Mapped[str] = mapped_column(String, primary_key=True)
     name: Mapped[str] = mapped_column(String)
     location: Mapped[str] = mapped_column(String, default="")
 
 
 class Item(Base):
+    """Database model for a grocery item."""
+
     __tablename__ = "items"
+
     id: Mapped[str] = mapped_column(String, primary_key=True)
     name: Mapped[str] = mapped_column(String, index=True)
     price: Mapped[float | None] = mapped_column(Float, nullable=True)
