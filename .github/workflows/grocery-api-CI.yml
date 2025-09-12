@@ -12,12 +12,16 @@ jobs:
 
     defaults:
       run:
-        working-directory: apps/grocery-api  # <- run commands inside grocery-api
+        working-directory: apps/grocery_api  # <- run commands inside grocery-api
 
     steps:
       # Step 1: Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
+      
+      - name: Load .env
+        run: cp ../../.env .env
+        working-directory: apps/grocery_api
 
       # Step 2: Setup Python
       - name: Set up Python 3.11
