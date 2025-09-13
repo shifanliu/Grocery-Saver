@@ -12,16 +12,19 @@ jobs:
 
     defaults:
       run:
-        working-directory: apps/grocery_api  # <- run commands inside grocery-api
+        working-directory: apps/grocery_api 
+
+    env:
+      DATABASE_URL: sqlite:///./grocery.db
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      REPO_TYPE: db
+
+
 
     steps:
       # Step 1: Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
-      
-      - name: Load .env
-        run: cp ../../.env .env
-        working-directory: apps/grocery_api
 
       # Step 2: Setup Python
       - name: Set up Python 3.11
@@ -39,18 +42,8 @@ jobs:
 
       # Step 5: Run linting
       - name: Lint
-        run: |
-          echo "Running flake8..."
-          uv run flake8 app
-          echo "Checking code formatting with black..."
-          uv run black --check app
-          echo "Checking import order with isort..."
-          uv run isort --check-only app
-          echo "Running pylint..."
-          uv run pylint app
+        run: make lint
 
       # Step 6: Run tests with coverage check
       - name: Test with coverage
-        run: |
-          echo "Running tests with pytest and coverage..."
-          uv run pytest --cov=app --cov-fail-under=80 tests
+        run: make test

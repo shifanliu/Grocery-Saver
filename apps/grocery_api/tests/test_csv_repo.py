@@ -5,12 +5,17 @@ Test script for CSV repository functionality
 
 import sys
 from pathlib import Path
+import os
+import pytest
 
 # Add the app directory to Python path
 sys.path.insert(0, str(Path(__file__).parent / "app"))
 
 from app.repository.manager import repo_manager
 from app.repository.config import RepositoryConfig
+
+if os.getenv("REPO_TYPE", "csv") == "db":
+    pytest.skip("Skipping CSV repo tests in DB mode", allow_module_level=True)
 
 
 def test_csv_repository():
