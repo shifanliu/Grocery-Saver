@@ -5,8 +5,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 # CSV 
 DATA_CSV_FILES = [
-    ROOT / "grocery-collector" / "costco_items.csv",
-    ROOT / "grocery-collector" / "safeway_items.csv",
+    ROOT / "grocery_collector" / "costco_items.csv",
+    ROOT / "grocery_collector" / "safeway_items.csv",
 ]
 
 DEFAULT_LIMIT = 20

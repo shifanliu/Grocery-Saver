@@ -83,8 +83,8 @@ Configure CSV file paths in `config.py`:
 
 ```python
 CSV_PATHS = [
-    Path("apps/grocery-collector/costco_items.csv"),
-    Path("apps/grocery-collector/safeway_items.csv"),
+    Path("apps/grocery_collector/costco_items.csv"),
+    Path("apps/grocery_collector/safeway_items.csv"),
 ]
 ```
 

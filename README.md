@@ -23,7 +23,7 @@ uvicorn app.main:app --reload --port 8000
 
 Collector (dev):
 ```bash
-cd apps/grocery-collector
+cd apps/grocery_collector
 python -m venv .venv && .venv/Scripts/activate  # Windows
 pip install -r requirements.txt
 python -m collector.run_once

@@ -19,12 +19,12 @@ class RepositoryConfig:
     """Configuration for repository layer."""
 
     # Repository type: "csv" or "db"
-    REPO_TYPE = os.getenv("REPO_TYPE", "csv")
+    REPO_TYPE = os.getenv("REPO_TYPE", "db")
 
     # CSV file paths (relative to project root)
     CSV_PATHS = [
-        Path("apps/grocery-collector/costco_items.csv"),
-        Path("apps/grocery-collector/safeway_items.csv"),
+        Path("apps/grocery_collector/costco_items.csv"),
+        Path("apps/grocery_collector/safeway_items.csv"),
     ]
 
     # Database settings (for future use)

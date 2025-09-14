@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grocery Saver</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Grocery Saver - Item List</h1>
+
+    <!-- Search and filter -->
+    <form method="get" action="/">
+        <input type="text" name="q" placeholder="Search items..."
+               value="{{ query if query else '' }}">
+        
+        <select name="store_id">
+            <option value="">All Stores</option>
+            {% for s in stores %}
+                <option value="{{ s.id }}" {% if store_id == s.id %}selected{% endif %}>
+                    {{ s.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Stats -->
+    <div class="stats">
+        <p>Total items: {{ stats.items }}</p>
+        <p>Total stores: {{ stats.stores }}</p>
+        <ul>
+            {% for sid, count in stats.store_counts.items() %}
+                <li>{{ sid }}: {{ count }} items</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Item table -->
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Promotion Price</th>
+            <th>Store</th>
+            <th>Category</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.promotion_price }}</td>
+            <td>{{ item.store_id }}</td>
+            <td>{{ item.category }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="/?q={{ query if query else '' }}&store_id={{ store_id if store_id else '' }}&page={{ page-1 }}&limit={{ limit }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page }}</span>
+        {% if items|length == limit %}
+            <a href="/?q={{ query if query else '' }}&store_id={{ store_id if store_id else '' }}&page={{ page+1 }}&limit={{ limit }}">Next</a>
+        {% endif %}
+    </div>
+</body>
+</html>

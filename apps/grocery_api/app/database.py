@@ -11,8 +11,11 @@ This module configures the database connection using SQLAlchemy, including:
 
 import os
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+
+load_dotenv()
 
 DEFAULT_DB_URL = "sqlite:///./grocery.db"
 DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DB_URL)
