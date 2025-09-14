@@ -121,7 +121,7 @@ def fetch_all_categories():
         all_rows.extend(part)
     return all_rows
 
-def write_csv(rows, out_path="costco_items2.csv"):
+def write_csv(rows, out_path="costco_items.csv"):
     fieldnames = ["id", "name", "price", "promotion_price", "store_id", "last_seen_time", "category", "active"]
     with open(out_path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
