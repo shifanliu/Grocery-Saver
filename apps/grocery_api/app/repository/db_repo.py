@@ -132,9 +132,6 @@ class DatabaseRepository(BaseRepository):
     def upsert_item(self, item_data: Dict[str, Any]) -> Dict[str, Any]:
         """Upsert item using database."""
 
-        if item_data["store_id"] == "3132":
-            item_data["store_id"] = "SAFEWAY_3132"
-
         # Check if item exists
         existing_item = self.db.get(DBItem, item_data["id"])
 

@@ -1,69 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Grocery Saver</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Grocery Saver - Item List</h1>
+    <div class="page">
+        <header class="site-header">
+            <div>
+                <h1>Grocery Saver</h1>
+                <div class="tagline">Costco &amp; Safeway prices, updated weekly</div>
+            </div>
+        </header>
 
-    <!-- Search and filter -->
-    <form method="get" action="/">
-        <input type="text" name="q" placeholder="Search items..."
-               value="{{ query if query else '' }}">
-        
-        <select name="store_id">
-            <option value="">All Stores</option>
+        <div class="stats">
+            <div class="stat-tile">
+                <div class="value">{{ stats['items'] }}</div>
+                <div class="label">Items</div>
+            </div>
+            <div class="stat-tile">
+                <div class="value">{{ stats['stores'] }}</div>
+                <div class="label">Stores</div>
+            </div>
+            {% for sid, count in (stats.store_counts or {}).items() %}
+            <div class="stat-tile">
+                <div class="value">{{ count }}</div>
+                <div class="label">{{ sid }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <form method="get" action="/" class="toolbar">
+            <input type="text" name="q" placeholder="Search items..."
+                   value="{{ query if query else '' }}">
+            <input type="hidden" name="store_id" value="{{ store_id if store_id else '' }}">
+            <button type="submit">Search</button>
+        </form>
+
+        <div class="store-pills">
+            <a class="store-pill {{ 'active' if not store_id else '' }}"
+               href="/?q={{ query if query else '' }}&store_id=">All Stores</a>
             {% for s in stores %}
-                <option value="{{ s.id }}" {% if store_id == s.id %}selected{% endif %}>
-                    {{ s.name }}
-                </option>
+            <a class="store-pill {{ 'active' if store_id == s.id else '' }}"
+               href="/?q={{ query if query else '' }}&store_id={{ s.id }}">{{ s.name }}</a>
             {% endfor %}
-        </select>
+        </div>
 
-        <button type="submit">Search</button>
-    </form>
+        <div class="layout">
+            <div>
+                {% if items %}
+                <div class="item-grid">
+                    {% for item in items %}
+                    {% set has_promo = item.promotion_price and item.price and item.promotion_price < item.price %}
+                    <div class="item-card">
+                        <div class="item-name">{{ item.name }}</div>
+                        <div class="item-meta">
+                            <span>{{ item.store_id }}</span>
+                            <span>{{ item.category }}</span>
+                        </div>
+                        <div class="price-row">
+                            {% if has_promo %}
+                                <span class="price has-promo">${{ "%.2f"|format(item.promotion_price) }}</span>
+                                <span class="price-original">${{ "%.2f"|format(item.price) }}</span>
+                            {% elif item.promotion_price %}
+                                <span class="price">${{ "%.2f"|format(item.promotion_price) }}</span>
+                            {% elif item.price %}
+                                <span class="price">${{ "%.2f"|format(item.price) }}</span>
+                            {% else %}
+                                <span class="price">--</span>
+                            {% endif %}
+                        </div>
+                        <button class="add-to-basket"
+                                data-item-id="{{ item.id }}"
+                                data-item-name="{{ item.name }}"
+                                data-item-store="{{ item.store_id }}">
+                            + Add to basket
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
 
-    <!-- Stats -->
-    <div class="stats">
-        <p>Total items: {{ stats.items }}</p>
-        <p>Total stores: {{ stats.stores }}</p>
-        <ul>
-            {% for sid, count in stats.store_counts.items() %}
-                <li>{{ sid }}: {{ count }} items</li>
-            {% endfor %}
-        </ul>
+                <div class="pagination">
+                    {% if page > 1 %}
+                        <a href="/?q={{ query if query else '' }}&store_id={{ store_id if store_id else '' }}&page={{ page-1 }}&limit={{ limit }}">&larr; Previous</a>
+                    {% endif %}
+                    <span>Page {{ page }}</span>
+                    {% if items|length == limit %}
+                        <a href="/?q={{ query if query else '' }}&store_id={{ store_id if store_id else '' }}&page={{ page+1 }}&limit={{ limit }}">Next &rarr;</a>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="empty-state">No items found. Try a different search or store filter.</div>
+                {% endif %}
+            </div>
+
+            <aside class="basket-panel">
+                <h2>Basket <span class="basket-count" id="basket-count">0</span></h2>
+                <ul id="basket-list"></ul>
+                <div class="basket-empty" id="basket-empty">No items yet. Add some from the list.</div>
+                <button id="suggest-recipes-btn" disabled>Suggest recipes</button>
+                <div id="recipe-results"></div>
+            </aside>
+        </div>
     </div>
 
-    <!-- Item table -->
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Promotion Price</th>
-            <th>Store</th>
-            <th>Category</th>
-        </tr>
-        {% for item in items %}
-        <tr>
-            <td>{{ item.name }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ item.promotion_price }}</td>
-            <td>{{ item.store_id }}</td>
-            <td>{{ item.category }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    <!-- Pagination -->
-    <div class="pagination">
-        {% if page > 1 %}
-            <a href="/?q={{ query if query else '' }}&store_id={{ store_id if store_id else '' }}&page={{ page-1 }}&limit={{ limit }}">Previous</a>
-        {% endif %}
-        <span>Page {{ page }}</span>
-        {% if items|length == limit %}
-            <a href="/?q={{ query if query else '' }}&store_id={{ store_id if store_id else '' }}&page={{ page+1 }}&limit={{ limit }}">Next</a>
-        {% endif %}
-    </div>
+    <script src="/static/app.js"></script>
 </body>
 </html>

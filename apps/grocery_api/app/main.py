@@ -17,7 +17,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.database import SessionLocal
 from app.repository.manager import repo_manager
-from app.routers import items, stores
+from app.routers import items, recipes, stores
 
 load_dotenv()
 
@@ -29,6 +29,7 @@ app = FastAPI(title="Grocery API")
 # Register API routers
 app.include_router(items.router, prefix="/items", tags=["items"])
 app.include_router(stores.router, prefix="/stores", tags=["stores"])
+app.include_router(recipes.router, prefix="/recipes", tags=["recipes"])
 
 print("DATABASE_URL =", os.getenv("DATABASE_URL"))
 print("REPO_TYPE =", os.getenv("REPO_TYPE"))
