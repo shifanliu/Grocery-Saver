@@ -16,7 +16,8 @@ dependencies = [
   "pydantic>=2.7",
   "python-dotenv>=1.0",
   "requests>=2.31",
-  "lxml>=4.9", 
+  "lxml>=4.9",
+  "openai>=1.50",
 ]
 
 [project.optional-dependencies]

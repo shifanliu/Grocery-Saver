@@ -10,6 +10,7 @@ This module configures the database connection using SQLAlchemy, including:
 """
 
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
@@ -17,7 +18,11 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 load_dotenv()
 
-DEFAULT_DB_URL = "sqlite:///./grocery.db"
+# apps/grocery_api/app/database.py -> repo root is 3 levels up
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_DB_PATH = REPO_ROOT / "data" / "grocery.db"
+DEFAULT_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+DEFAULT_DB_URL = f"sqlite:///{DEFAULT_DB_PATH.as_posix()}"
 DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DB_URL)
 
 connect_args = {}
