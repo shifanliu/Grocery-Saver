@@ -32,6 +32,51 @@
             {% endfor %}
         </div>
 
+        <section class="planner-panel" id="planner-panel" aria-labelledby="planner-title">
+            <div class="planner-head">
+                <div>
+                    <h2 id="planner-title">Meal Planner</h2>
+                    <div class="planner-sub">Tell it your budget, how many people, diet and what you already have. It plans one meal from our product data and prices the whole packages you would buy.</div>
+                </div>
+                <div class="planner-controls">
+                    <label>Planner
+                        <select id="planner-mode">
+                            <option value="deterministic">Rule-based</option>
+                            <option value="llm">Gemini picks the meal</option>
+                        </select>
+                    </label>
+                    <button type="button" class="planner-secondary" id="planner-reset">New plan</button>
+                </div>
+            </div>
+            <div class="planner-log" id="planner-log" role="log" aria-live="polite"></div>
+            <div class="planner-examples" id="planner-examples" aria-label="Example requests"></div>
+            <form id="planner-chat-form" class="planner-chat-form" autocomplete="off">
+                <input type="text" id="planner-input" maxlength="500" aria-label="Meal planner request"
+                       placeholder="e.g. Plan a vegetarian dinner for 2 under $40. I have 500 g of onions.">
+                <button type="submit" id="planner-send">Send</button>
+            </form>
+            <details class="planner-form-details">
+                <summary>Use the form instead</summary>
+                <form id="planner-struct-form" class="planner-struct-form">
+                    <label>Budget (USD) <input type="number" id="pf-budget" min="0.01" step="0.01" required></label>
+                    <label>People <input type="number" id="pf-people" min="1" max="50" step="1" required></label>
+                    <label>Diet
+                        <select id="pf-diet">
+                            <option value="">No preference</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                        </select>
+                    </label>
+                    <fieldset>
+                        <legend>Already at home</legend>
+                        <div id="pf-pantry"></div>
+                        <button type="button" class="planner-secondary" id="pf-add-pantry">+ Add pantry item</button>
+                    </fieldset>
+                    <button type="submit" id="pf-submit">Plan meal</button>
+                </form>
+            </details>
+        </section>
+
         <form method="get" action="/" class="toolbar">
             <input type="text" name="q" placeholder="Search items..."
                    value="{{ query if query else '' }}">
@@ -107,5 +152,6 @@
     </div>
 
     <script src="/static/app.js"></script>
+    <script src="/static/planner.js"></script>
 </body>
 </html>
