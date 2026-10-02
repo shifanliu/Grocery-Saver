@@ -1,0 +1,337 @@
+{
+ "kind": "snapshot",
+ "label": "Costco Business Delivery rows (store COSTCO_95616) copied read-only from the Grocery Saver SQLite DB; includes unmapped distractor rows",
+ "source_date": "2026-07-22",
+ "items": [
+  {
+   "id": "841930",
+   "name": "Kirkland Signature Thai Hom Mali Jasmine Rice, Long Grain, 25 lbs",
+   "price": 25.29,
+   "promotion_price": 25.29,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "207",
+   "name": "Homai Calrose Rice, Premium Sushi Rice, Medium Grain, 25 lbs",
+   "price": 15.89,
+   "promotion_price": 15.89,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "1831343",
+   "name": "Supreme Rice Parboiled Enriched Long Grain, 25 lbs",
+   "price": 14.29,
+   "promotion_price": 14.29,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "5415",
+   "name": "Bunge Homai California Brown Rice, 25 lbs",
+   "price": 14.29,
+   "promotion_price": 14.29,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "171345",
+   "name": "Teasdale Black Beans, #10 can, 6 lbs 12 oz",
+   "price": 6.89,
+   "promotion_price": 6.89,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "405378",
+   "name": "Teasdale Pinto Beans, #10 can, 6 lbs 12 oz",
+   "price": 7.79,
+   "promotion_price": 7.79,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "3015",
+   "name": "Teasdale Kidney Beans, #10 can, 6 lbs 12 oz",
+   "price": 7.99,
+   "promotion_price": 7.99,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "1959935",
+   "name": "Prima Terra Whole Peeled Tomatoes In Juice, 102 oz",
+   "price": 4.99,
+   "promotion_price": 4.99,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "1977524",
+   "name": "Prima Terra Ground Peeled Tomatoes In Puree, 106 oz",
+   "price": 5.79,
+   "promotion_price": 5.79,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "699753",
+   "name": "Yellow Onions, 10 lbs",
+   "price": 8.79,
+   "promotion_price": 8.79,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:22Z",
+   "category": "fresh-produce",
+   "active": true
+  },
+  {
+   "id": "228233",
+   "name": "Sweet Onion, 10 lbs",
+   "price": 10.19,
+   "promotion_price": 10.19,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:22Z",
+   "category": "fresh-produce",
+   "active": true
+  },
+  {
+   "id": "5938",
+   "name": "Gold Potatoes, 10 lbs",
+   "price": 8.59,
+   "promotion_price": 8.59,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:22Z",
+   "category": "fresh-produce",
+   "active": true
+  },
+  {
+   "id": "7445",
+   "name": "Baking Potatoes, 10 lbs",
+   "price": 4.69,
+   "promotion_price": 4.69,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:22Z",
+   "category": "fresh-produce",
+   "active": true
+  },
+  {
+   "id": "1738408",
+   "name": "Kirkland Signature Large Eggs, Free Range, 2 Dozen",
+   "price": 6.09,
+   "promotion_price": 6.09,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:18Z",
+   "category": "dairy-eggs",
+   "active": true
+  },
+  {
+   "id": "1832329",
+   "name": "Jumbo Eggs, Cage Free, 40 ct",
+   "price": 6.19,
+   "promotion_price": 6.19,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:18Z",
+   "category": "dairy-eggs",
+   "active": true
+  },
+  {
+   "id": "1204135",
+   "name": "House Foods Organic Tofu, Firm, 16 oz, 4 ct",
+   "price": 7.99,
+   "promotion_price": 7.99,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:21Z",
+   "category": "deli",
+   "active": true
+  },
+  {
+   "id": "5623",
+   "name": "Broccoli Florets, 3 lbs",
+   "price": 8.69,
+   "promotion_price": 8.69,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:22Z",
+   "category": "fresh-produce",
+   "active": true
+  },
+  {
+   "id": "258966",
+   "name": "Flav-R-Pac Broccoli Florets, 3.5 lbs",
+   "price": 7.89,
+   "promotion_price": 7.89,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:26Z",
+   "category": "frozen-foods",
+   "active": true
+  },
+  {
+   "id": "412",
+   "name": "Organic Baby Carrots, Cut & Peeled, 2 lbs, 2 ct",
+   "price": 6.19,
+   "promotion_price": 6.19,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:22Z",
+   "category": "fresh-produce",
+   "active": true
+  },
+  {
+   "id": "1953370",
+   "name": "Barilla for Professionals Spaghetti Pasta, Classic, 10 lb, 2 ct",
+   "price": 25.99,
+   "promotion_price": 25.99,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "17351",
+   "name": "Guerrero 6\" Corn Tortillas, 100 ct",
+   "price": 5.29,
+   "promotion_price": 5.29,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:15Z",
+   "category": "breads-bakery",
+   "active": true
+  },
+  {
+   "id": "576692",
+   "name": "La Fiesta 4.5\" Corn Tortillas, 34 oz, 60 ct",
+   "price": 3.09,
+   "promotion_price": 3.09,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:15Z",
+   "category": "breads-bakery",
+   "active": true
+  },
+  {
+   "id": "51070",
+   "name": "Kirkland Signature Premium Chunk Chicken Breast, 12.5 oz, 6 ct",
+   "price": 14.49,
+   "promotion_price": 14.49,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:35Z",
+   "category": "pantry-dry-goods",
+   "active": true
+  },
+  {
+   "id": "1936928",
+   "name": "Kirkland Signature Super Premium Adult Dog Food, Chicken, Rice & Vegetable, 25 lbs",
+   "price": 25.49,
+   "promotion_price": 25.49,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:39Z",
+   "category": "pet-supplies",
+   "active": true
+  },
+  {
+   "id": "253531",
+   "name": "Kirkland Signature Super Premium Chicken & Rice Dog Food, 20 lbs",
+   "price": 21.19,
+   "promotion_price": 21.19,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:39Z",
+   "category": "pet-supplies",
+   "active": true
+  },
+  {
+   "id": "47735",
+   "name": "Kirkland Signature Chicken Breasts, Boneless Skinless, 9 lb avg wt",
+   "price": 2.99,
+   "promotion_price": 2.99,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:32Z",
+   "category": "meat-seafood",
+   "active": true
+  },
+  {
+   "id": "14057",
+   "name": "Crescent Foods Halal Chicken Breast, Hand Cut, Boneless Skinless, 4 lb avg wt",
+   "price": 5.04,
+   "promotion_price": 5.04,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:32Z",
+   "category": "meat-seafood",
+   "active": true
+  },
+  {
+   "id": "906331",
+   "name": "Rotisserie Chicken Breast Meat, 46 oz",
+   "price": 14.79,
+   "promotion_price": 14.79,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:21Z",
+   "category": "deli",
+   "active": true
+  },
+  {
+   "id": "542081",
+   "name": "McCain Brew City Beer Battered Onion Rings, Thick Cut, 40 oz",
+   "price": 11.09,
+   "promotion_price": 11.09,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:26Z",
+   "category": "frozen-foods",
+   "active": true
+  },
+  {
+   "id": "44939",
+   "name": "Kirkland Signature Ground Beef, 80% Lean, 10 lb avg wt",
+   "price": 4.99,
+   "promotion_price": 4.99,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:32Z",
+   "category": "meat-seafood",
+   "active": true
+  },
+  {
+   "id": "446586",
+   "name": "Quaker Oats Old Fashioned Oatmeal, 10 lbs",
+   "price": 9.39,
+   "promotion_price": 9.39,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:17Z",
+   "category": "cereal-breakfast",
+   "active": true
+  },
+  {
+   "id": "731962",
+   "name": "Bob's Red Mill Quick Cooking 100% Whole Grain Oats, 112 oz",
+   "price": 14.69,
+   "promotion_price": 14.69,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:17Z",
+   "category": "cereal-breakfast",
+   "active": true
+  },
+  {
+   "id": "1462402",
+   "name": "Post Honey Bunches of Oats Cereal, with Almonds, 50 oz",
+   "price": 9.59,
+   "promotion_price": 9.59,
+   "store_id": "COSTCO_95616",
+   "last_seen_time": "2026-07-22T05:37:17Z",
+   "category": "cereal-breakfast",
+   "active": true
+  }
+ ]
+}

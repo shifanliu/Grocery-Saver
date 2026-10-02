@@ -21,31 +21,32 @@ It also integrates a **Meal Planner** panel, backed by a separate agent service.
 | Backend | FastAPI, SQLAlchemy |
 | Database | SQLite file `data/grocery.db`, committed to this repo and refreshed weekly by `.github/workflows/scrape-weekly.yml`. PostgreSQL is only an unmaintained option via `DATABASE_URL`; `infra/compose.yaml` is not used by the current setup |
 | Collectors | Python scripts in `apps/grocery_collector` (requests, lxml) |
-| Meal-planner agent | Separate repo, Flask service, rule-based workflow (no MCP) |
+| Meal-planner agent | `agent/` in this repo: Flask service running a rule-based workflow (no MCP) |
 | AI | Gemini via `google-genai` for reading chat messages and, optionally, picking the meal. The older "Suggest recipes" button uses OpenAI (`OPENAI_API_KEY`) |
-| Tooling | `uv` (this repo, root `pyproject.toml` and `uv.lock`) and a plain `venv` + pip (agent repo) |
+| Tooling | `uv` for the Grocery Saver app (root `pyproject.toml` and `uv.lock`); a separate plain `venv` + pip for `agent/` (`agent/requirements.txt`) |
 
 ## Layout
 
-The meal planner lives in a **separate sibling repository**. It is not included when you clone Grocery Saver;
-clone or copy it next to this repo (the agent code is on branch `feature/grocery-meal-agent`, not yet on its `main`).
+The meal planner is the `agent/` folder of this repo. It runs as its own process with its own virtual environment;
+the two Python environments are kept separate.
 
 ```
-GrocerySaver/
-├── grocery/                      # this repo
-│   ├── pyproject.toml, uv.lock   # dependencies (environment: grocery/.venv)
-│   ├── data/grocery.db           # SQLite data (tracked in git)
-│   ├── apps/
-│   │   ├── grocery_api/          # FastAPI app: app/main.py, routers/ (items, stores, recipes, planner),
-│   │   │   │                     #   templates/, static/ (app.js, planner.js, style.css), tests/
-│   │   │   └── API_CONTRACTS.md  # endpoint contracts
-│   │   ├── grocery_collector/    # price collectors
-│   │   └── dashboard/            # placeholder only
-│   └── .github/workflows/        # CI and weekly scrape
-└── agent/                        # sibling repo: meal-planner agent
-    ├── mealplan/                 # server.py (Flask), chat.py, workflow.py, tools.py, catalog.py
-    ├── tests/, demo/, data/      # tests, demo requests, offline fixture
-    └── MEALPLAN_README.md        # detailed workflow, testing, limitations
+Grocery-Saver/                    # repo root
+├── pyproject.toml, uv.lock       # Grocery Saver dependencies (environment: .venv)
+├── data/grocery.db               # SQLite data (tracked in git)
+├── apps/
+│   ├── grocery_api/              # FastAPI app: app/main.py, routers/ (items, stores, recipes, planner),
+│   │   │                         #   templates/, static/ (app.js, planner.js, style.css), tests/
+│   │   └── API_CONTRACTS.md      # endpoint contracts
+│   ├── grocery_collector/        # price collectors
+│   └── dashboard/                # placeholder only
+├── agent/                        # meal-planner agent (own venv: agent/.venv)
+│   ├── mealplan/                 # server.py (Flask), chat.py, workflow.py, tools.py, catalog.py
+│   ├── tests/, demo/, data/      # tests, demo requests, offline fixture
+│   ├── generate.py, config.py    # Gemini adapter and settings (from a course starter template)
+│   ├── requirements.txt, .env.example
+│   └── README.md                 # detailed workflow, testing, limitations
+└── .github/workflows/            # CI and weekly scrape
 ```
 
 Request flow: **browser** → `POST /planner/chat` or `/planner/plan` on Grocery Saver (FastAPI validates the input
@@ -56,18 +57,17 @@ The Gemini key is only ever read by the agent service.
 ## Setup (first time only)
 
 Requirements: Windows PowerShell, [uv](https://docs.astral.sh/uv/), Python 3.11 to 3.13 (the agent's pinned
-packages do not support 3.14). Replace the paths if your folders differ.
+packages do not support 3.14). Commands start from the folder that contains the cloned repo.
 
 ```powershell
-# 1. Grocery Saver (creates grocery\.venv from uv.lock)
-cd GrocerySaver\grocery
+# 1. Grocery Saver (creates .venv from uv.lock)
+cd Grocery-Saver
 uv sync
 
 # 2. Meal-planner agent (separate virtual environment)
-cd ..\agent
-git checkout feature/grocery-meal-agent
+cd agent
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install "flask>=3.0,<4.0" "python-dotenv>=1.0,<1.2" "google-genai>=1.0,<2.0"
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 
 # 3. Gemini key for chat and the optional LLM planner (the rule-based form works without it)
 Copy-Item .env.example .env
@@ -77,17 +77,17 @@ notepad .env        # set GEMINI_API_KEY=... ; .env is git-ignored, never commit
 Data: a fresh clone already contains `data/grocery.db` (1,223 Costco items, prices dated 2026-07-22 at the time of
 writing). You do not need to run the collectors. The planner warns when prices are more than 14 days old.
 
-Optional: `OPENAI_API_KEY` in `grocery\.env` (copy `.env.example`) enables the "Suggest recipes" button only.
+Optional: `OPENAI_API_KEY` in the repo-root `.env` (copy `.env.example`) enables the "Suggest recipes" button only.
 
 ## Run (every time, two terminals)
 
 ```powershell
 # Terminal 1: Grocery Saver on http://127.0.0.1:8000
-cd GrocerySaver\grocery\apps\grocery_api
+cd Grocery-Saver\apps\grocery_api
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 # Terminal 2: meal-planner agent service on http://127.0.0.1:5001
-cd GrocerySaver\agent
+cd Grocery-Saver\agent
 .\.venv\Scripts\python.exe -m mealplan.server
 ```
 
@@ -115,8 +115,8 @@ data; no retailer URLs exist in the data, so none are shown.
 ## Tests
 
 ```powershell
-cd GrocerySaver\grocery; uv sync --extra dev; cd apps\grocery_api; uv run pytest tests
-cd GrocerySaver\agent; .\.venv\Scripts\python.exe -m pip install pytest; .\.venv\Scripts\python.exe -m pytest tests
+cd Grocery-Saver; uv sync --extra dev; cd apps\grocery_api; uv run pytest tests
+cd Grocery-Saver\agent; .\.venv\Scripts\python.exe -m pip install pytest; .\.venv\Scripts\python.exe -m pytest tests
 ```
 
 ## Limitations
@@ -129,5 +129,4 @@ cd GrocerySaver\agent; .\.venv\Scripts\python.exe -m pip install pytest; .\.venv
 - Refreshing the page clears the chat state.
 - Both local services must be running; they are development servers.
 
-More detail on the workflow, statuses and testing: [agent/MEALPLAN_README.md](../agent/MEALPLAN_README.md)
-(in the sibling repo).
+More detail on the workflow, statuses and testing: [agent/README.md](agent/README.md).
