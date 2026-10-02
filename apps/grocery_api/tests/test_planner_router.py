@@ -138,3 +138,10 @@ def test_product_page_escapes_html(client, db_session, seed_data):
     db_session.commit()
     page = client.get("/products/test_store:xss")
     assert "<script>alert(1)</script>" not in page.text and "&lt;script&gt;" in page.text
+
+
+def test_high_protein_preference_is_accepted_and_forwarded(client, seed_data, agent):
+    sent = agent({"kind": "result", "result": {"status": "success", "cost": None}})
+    payload = {**GOOD_PLAN, "dietary_preferences": ["vegan", "high_protein"]}
+    assert client.post("/planner/plan", json=payload).status_code == 200
+    assert sent["body"]["request"]["dietary_preferences"] == ["vegan", "high_protein"]

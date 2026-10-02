@@ -51,7 +51,9 @@ class PantryItem(BaseModel):
 class PlanRequest(BaseModel):
     budget: Decimal = Field(gt=0, le=1_000_000)
     people: int = Field(ge=1, le=50)
-    dietary_preferences: list[Literal["vegetarian", "vegan"]] = Field(default_factory=list, max_length=2)
+    dietary_preferences: list[Literal["vegetarian", "vegan", "high_protein"]] = Field(
+        default_factory=list, max_length=3
+    )
     pantry: list[PantryItem] = Field(default_factory=list, max_length=20)
     planner: Planner = "deterministic"
 

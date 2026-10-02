@@ -4,12 +4,13 @@
   // Everything user- or model-derived is inserted with textContent, never innerHTML.
 
   var INGREDIENTS = ["rice", "beans", "tomatoes", "onion", "potatoes", "eggs", "tofu",
-    "broccoli", "carrots", "pasta", "tortillas", "chicken"];
+    "broccoli", "carrots", "pasta", "tortillas", "chicken", "oats"];
   var UNITS = ["g", "kg", "oz", "lb", "ml", "l", "count", "dozen"];
   var EXAMPLES = [
     "Plan a vegetarian dinner for 2 under $40. I have 500 g of onions.",
     "Vegan dinner for 4, budget $15",
-    "Dinner for 2 with a $60 budget",
+    "High-protein meal for 1 under $25",
+    "Vegan high-protein dinner for 2, budget $50",
   ];
   var STATUS_TITLES = {
     success: "Plan ready",
@@ -120,6 +121,10 @@
       var title = status === "over_budget" ? "Cheapest option tried: " : "";
       box.appendChild(el("h3", "pl-meal",
         title + (plan.name || "Meal") + " for " + (plan.people || req.people) + " people"));
+      if (plan.est_protein_g_per_serving) {
+        box.appendChild(el("p", "pl-note", "Approx. " + plan.est_protein_g_per_serving +
+          " g protein per serving (rough estimate from typical food values; not nutrition advice)."));
+      }
       box.appendChild(el("p", "pl-budget",
         "Budget " + money(req.budget) + " | Purchase total " + money(cost.total)));
 
@@ -313,7 +318,7 @@
     var payload = {
       budget: parseFloat(document.getElementById("pf-budget").value),
       people: parseInt(document.getElementById("pf-people").value, 10),
-      dietary_preferences: diet ? [diet] : [],
+      dietary_preferences: diet ? diet.split(",") : [],
       pantry: pantry,
       planner: modeEl.value,
     };
