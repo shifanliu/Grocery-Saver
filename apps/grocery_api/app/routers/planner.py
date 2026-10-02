@@ -35,7 +35,9 @@ Planner = Literal["deterministic", "llm"]
 
 
 def _service_url() -> str:
-    return os.getenv("PLANNER_SERVICE_URL", "http://127.0.0.1:5001").rstrip("/")
+    return os.getenv("PLANNER_SERVICE_URL", "http://127.0.0.1:5001").rstrip(
+        "/"
+    )
 
 
 def _timeout() -> float:
@@ -43,22 +45,28 @@ def _timeout() -> float:
 
 
 class PantryItem(BaseModel):
+    """One ingredient the user already has."""
+
     ingredient: str = Field(min_length=1, max_length=40)
     quantity: Decimal = Field(gt=0, le=10_000_000)
     unit: Unit
 
 
 class PlanRequest(BaseModel):
+    """Structured meal-plan request (form input)."""
+
     budget: Decimal = Field(gt=0, le=1_000_000)
     people: int = Field(ge=1, le=50)
-    dietary_preferences: list[Literal["vegetarian", "vegan", "high_protein"]] = Field(
-        default_factory=list, max_length=3
-    )
+    dietary_preferences: list[
+        Literal["vegetarian", "vegan", "high_protein"]
+    ] = Field(default_factory=list, max_length=3)
     pantry: list[PantryItem] = Field(default_factory=list, max_length=20)
     planner: Planner = "deterministic"
 
 
 class ChatRequest(BaseModel):
+    """One chat turn plus the conversation state collected so far."""
+
     message: str = Field(min_length=1, max_length=500)
     pending: Optional[dict[str, Any]] = None
     planner: Planner = "deterministic"
@@ -83,7 +91,10 @@ def _forward(path: str, payload: dict) -> dict:
     except TimeoutError as e:
         raise HTTPException(
             status_code=504,
-            detail=f"Meal planner service did not answer within {_timeout():.0f}s.",
+            detail=(
+                "Meal planner service did not answer within "
+                f"{_timeout():.0f}s."
+            ),
         ) from e
     except (urllib.error.URLError, OSError) as e:
         raise HTTPException(
@@ -134,7 +145,11 @@ def plan(req: PlanRequest, db: Session = Depends(get_db)):
             "people": req.people,
             "dietary_preferences": req.dietary_preferences,
             "pantry": [
-                {"ingredient": p.ingredient.strip().lower(), "quantity": str(p.quantity), "unit": p.unit}
+                {
+                    "ingredient": p.ingredient.strip().lower(),
+                    "quantity": str(p.quantity),
+                    "unit": p.unit,
+                }
                 for p in req.pantry
             ],
         },
@@ -144,6 +159,10 @@ def plan(req: PlanRequest, db: Session = Depends(get_db)):
 
 @router.post("/chat")
 def chat(req: ChatRequest, db: Session = Depends(get_db)):
-    """One natural-language turn -> agent /chat (clarification or a finished plan)."""
-    payload = {"message": req.message, "pending": req.pending, "planner": req.planner}
+    """One natural-language turn -> agent /chat (clarify or plan)."""
+    payload = {
+        "message": req.message,
+        "pending": req.pending,
+        "planner": req.planner,
+    }
     return _attach_links(_forward("/chat", payload), db)

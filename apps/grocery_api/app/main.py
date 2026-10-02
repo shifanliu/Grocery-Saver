@@ -95,10 +95,9 @@ def ui_home(
         },
     )
 
+
 @app.get("/products/{item_id}", response_class=HTMLResponse)
-def ui_product(
-    request: Request, item_id: str, db: Session = Depends(get_db)
-):
+def ui_product(request: Request, item_id: str, db: Session = Depends(get_db)):
     """Product detail page: the fields we actually store for one item."""
     repo_manager.initialize(db)
     item = repo_manager.get_item(item_id)
