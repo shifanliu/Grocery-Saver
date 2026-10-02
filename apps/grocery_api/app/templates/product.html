@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ item.name if item else "Product not found" }} - Grocery Saver</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="page">
+        <p><a href="/">&larr; Back to Grocery Saver</a></p>
+        {% if item %}
+        <div class="item-card product-detail">
+            <h1>{{ item.name }}</h1>
+            <dl class="detail-list">
+                <dt>Price</dt><dd>{% if item.price %}${{ "%.2f"|format(item.price) }}{% else %}not available{% endif %}</dd>
+                {% if item.promotion_price %}<dt>Promotion price</dt><dd>${{ "%.2f"|format(item.promotion_price) }}</dd>{% endif %}
+                <dt>Store</dt><dd>{{ item.store_id }}</dd>
+                <dt>Category</dt><dd>{{ item.category or "n/a" }}</dd>
+                <dt>Product ID</dt><dd>{{ item.id }}</dd>
+                <dt>Price last seen</dt><dd>{{ item.last_seen_time }}</dd>
+                <dt>Active</dt><dd>{{ "yes" if item.active else "no" }}</dd>
+            </dl>
+            <p class="item-meta">This is the data Grocery Saver stores. No retailer link is available for this product.</p>
+        </div>
+        {% else %}
+        <div class="empty-state">Product not found.</div>
+        {% endif %}
+    </div>
+</body>
+</html>

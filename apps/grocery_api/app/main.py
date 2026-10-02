@@ -10,14 +10,15 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query, Request
+from fastapi import Depends, FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 
-from app.database import SessionLocal
+from app.database import SessionLocal, get_db
 from app.repository.manager import repo_manager
-from app.routers import items, recipes, stores
+from app.routers import items, planner, recipes, stores
 
 load_dotenv()
 
@@ -30,6 +31,7 @@ app = FastAPI(title="Grocery API")
 app.include_router(items.router, prefix="/items", tags=["items"])
 app.include_router(stores.router, prefix="/stores", tags=["stores"])
 app.include_router(recipes.router, prefix="/recipes", tags=["recipes"])
+app.include_router(planner.router, prefix="/planner", tags=["planner"])
 
 print("DATABASE_URL =", os.getenv("DATABASE_URL"))
 print("REPO_TYPE =", os.getenv("REPO_TYPE"))
@@ -91,4 +93,17 @@ def ui_home(
             "limit": limit,
             "stats": stats,
         },
+    )
+
+
+@app.get("/products/{item_id}", response_class=HTMLResponse)
+def ui_product(request: Request, item_id: str, db: Session = Depends(get_db)):
+    """Product detail page: the fields we actually store for one item."""
+    repo_manager.initialize(db)
+    item = repo_manager.get_item(item_id)
+
+    return templates.TemplateResponse(
+        "product.html",
+        {"request": request, "item": item},
+        status_code=200 if item else 404,
     )

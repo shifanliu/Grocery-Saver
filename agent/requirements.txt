@@ -1,0 +1,4 @@
+# Meal-planner agent service. Python 3.11 to 3.13 (the google-genai pin does not support 3.14).
+flask>=3.0,<4.0
+python-dotenv>=1.0,<1.2
+google-genai>=1.0,<2.0
